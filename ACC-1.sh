@@ -13,10 +13,11 @@ NewEP=$(base64 /root/bashscripting_class/private/DP.txt)
 # Empty the Reminder file, put current PasswordEncoded per each spf number in the file private-Reminder.txt,Replace new password in Original file sftppush.properties.
 
 truncate -s 0  /root/bashscripting_class/private/private-Reminder.txt
-truncate -s 0  /root/bashscripting_class/private/private-Temp.txt
+
 
 for SPF in "SPF5371" "SPF5371A" "SPF5371B" "SPF5371C" "SPF5371D" "SPF5371E" "SPF13524" "SPF13525"
 do
+	truncate -s 0  /root/bashscripting_class/private/private-Temp.txt
 	EP1=$(grep "$SPF]" /cfg/sftppush.properties | grep PasswordEncoded | awk -F 'PasswordEncoded=' '{print $2}')
 	echo "$EP1" >> "/root/bashscripting_class/private/private-Reminder.txt"
 	echo "$EP1" >> "/root/bashscripting_class/private/private-Temp.txt"
@@ -25,7 +26,7 @@ do
 	echo "$EP2" >> "/root/bashscripting_class/private/private-Reminder.txt"
 	echo "$EP2" >> "/root/bashscripting_class/private/private-Temp.txt"
 	Compare=$(cat /root/bashscripting_class/private/private-Temp.txt | uniq -c | wc -l)
-	if [ $Compare == 1 ]; then
+	if [ $Compare -gt 1 ]; then
 		echo "disable line"
 		#trcmd DIS STOEGP01 "$SPF]" -u admin -p spazio > /dev/null 2>&1 &
 	else
